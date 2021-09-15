@@ -1,18 +1,15 @@
 FROM azul/zulu-openjdk:8
 
-RUN apt-get update && apt-get install -y ssh vim
+RUN apt-get update && apt-get install -y ssh vim curl
 
 RUN ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa
 RUN cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 RUN chmod 0600 ~/.ssh/authorized_keys
 
-COPY . .
-
 USER 0:0
 
-ADD https://dlcdn.apache.org/hadoop/common/hadoop-3.3.1/hadoop-3.3.1.tar.gz hadoop-3.3.1.tar.gz
-RUN tar xzf hadoop-3.3.1.tar.gz
-RUN rm hadoop-3.3.1.tar.gz
+ 
+RUN curl https://dlcdn.apache.org/hadoop/common/hadoop-3.3.1/hadoop-3.3.1.tar.gz -o hadoop-3.3.1.tar.gz \&& tar xzf hadoop-3.3.1.tar.gz \&& rm hadoop-3.3.1.tar.gz
 
 COPY ./etc /hadoop-3.3.1/etc
 
@@ -34,6 +31,5 @@ RUN sed -ri 's/#PermitEmptyPasswords yes/PermitEmptyPasswords yes/' /etc/ssh/ssh
 RUN sed -ri 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 RUN sed -ri 's/^UsePAM yes/UsePAM no/' /etc/ssh/sshd_config
 RUN passwd -d root
-RUN service ssh restart
 
-ENTRYPOINT service ssh restart & ./hadoop-3.3.1/sbin/start-all.sh
+ENTRYPOINT service ssh restart && ./hadoop-3.3.1/sbin/start-all.sh && /bin/bash

@@ -16,4 +16,8 @@
 
 <!-- Site specific YARN configuration properties -->
 
+<property>
+  <name>yarn.resourcemanager.scheduler.address</name>
+  <value>${yarn.resourcemanager.hostname}:8030</value>
+</property>
 </configuration>
