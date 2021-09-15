@@ -14,7 +14,7 @@
 <configuration>
 
   <property>
-    <name>barn.scheduler.capacity.maximum-applications</name>
+    <name>yarn.scheduler.capacity.maximum-applications</name>
     <value>10000</value>
     <description>
       Maximum number of applications that can be pending and running.
